@@ -4,6 +4,9 @@ import userImg from './imgTest.jpg'  //THIS WILL NOT WORK
 import ondas from './ondas.svg'
 import { useEffect, useState, useRef } from "react";
 import io from 'socket.io-client';
+import { MyProfileSchema } from "./MyProfile";
+import { MensajeEnviadoSchema, MensajeRecibidoSchema } from "./Mensajeria";
+import UserList from "./UserList";
 
 const MainPage = ()=>{
 
@@ -12,15 +15,49 @@ const MainPage = ()=>{
     const [arrayMensajes, setArrayMensajes] = useState([])
     const [temporalSendId, setTemporalSendId] = useState(0)
     const arrayMensajesRef = useRef(arrayMensajes);
+    const [isLoading, setIsLoading] = useState(true);
 
     let emisionEnviada = false;
-
     let messagesReceived = true;
     let timestamp = [];
 
+    const requestMessages = async () =>{
+      const socket = io('http://localhost:3001');
+      messagesReceived = true
+      timestamp = []
+      socket.on('messages', (data) => {
+        if(timestamp.length !=0){
+          console.log('esto se ejecuta')
+          emisionEnviada = true;
+          messagesReceived = false
+        }
+        if (!emisionEnviada) {
+          console.log('emision enviada --------')
+          data.mensajesEnviados.map(format => {
+            timestamp.push(format);
+          });
+          data.mensajesRecibidos.map(format => {
+            timestamp.push(format);
+          });
+
+          timestamp.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+          setArrayMensajes(timestamp)
+        }
+      });
+      fetch('http://localhost:3001/rsc/obtainmessages', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({id:temporalSendId !== 0? temporalSendId: null})
+      })
+    }
+
+    useEffect(() => {
+
+    }, []);
+
     
     useEffect(()=>{
-
         fetch('http://localhost:3001/rsc/obtainmyuserdata',{
             method:"GET"
         })
@@ -33,79 +70,48 @@ const MainPage = ()=>{
                 'userImage': data.userImage
             })
         })
-        .then(()=>{
-            fetch('http://localhost:3001/rsc/obtainusers',{
-                method:"GET"
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log('----------------------------')
-                let lista = data.map((elemento, index) =>{
-                    console.log(elemento.uid == userInfo.userID)
-                    return{
-                        userName: elemento.username,
-                        userUID: elemento.uid
-                    }
-                })
-                setAllUsers(lista)
-            })
-        })
-    
-
-    
-       //socket.on('connect', () => {
-       //  console.log('socket conectado en tiempo real');
-       //});
-    
+        //.then(()=>{
+        //  fetch('http://localhost:3001/rsc/obtainusers')
+        //  .then(res => res.json())
+        //  .then(data => {
+        //    console.log(data)
+        //    const userList = data
+        //      .filter(user => user.uid !== userInfo.userID)
+        //      .map(user => ({
+        //        userName: user.username,
+        //        userUID: user.uid
+        //      }));
+        //    setAllUsers(userList);
+        //    setIsLoading(false);
+        //  })
+        //  .catch(error => console.error(error));
+        //})
     },[])
+
+    useEffect(() => {
+      console.log('reconocido')
+      fetch('http://localhost:3001/rsc/obtainusers')
+        .then(res => res.json())
+        .then(data => {
+          const userList = data
+            .filter(user => user.uid !== userInfo.userID)
+            .map(user => ({
+              userName: user.username,
+              userUID: user.uid
+            }));
+          setAllUsers(userList);
+          setIsLoading(false);
+        })
+        .catch(error => console.error(error));
+    }, [userInfo.userID]);
+    
 
     const UserMessageSchema = ()=>{
 
         const UserSchema = (props) =>{
-
-            const requestMessages = async () =>{
-              const socket = io('http://localhost:3001');
-              messagesReceived = true
-              timestamp = []
-              //const socket = io('http://localhost:3001');
-              socket.on('messages', (data) => {
-                //console.log(emisionEnviada)
-                //console.log(timestamp.length)
-                if(timestamp.length !=0){
-                  console.log('esto se ejecuta')
-                  emisionEnviada = true;
-                  messagesReceived = false
-                }
-                if (!emisionEnviada) {
-                  console.log('emision enviada --------')
-                  // Procesar los mensajes recibidos
-                  data.mensajesEnviados.map(format => {
-                    timestamp.push(format);
-                  });
-                  data.mensajesRecibidos.map(format => {
-                    timestamp.push(format);
-                  });
-
-                  timestamp.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-                  setArrayMensajes(timestamp)
-                }
-              });
-
-              fetch('http://localhost:3001/rsc/obtainmessages', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({id:temporalSendId !== 0? temporalSendId: null})
-              })
-
-            }
-
             return(
                     <div className="userMessageSchema" key={props.index} onClick={()=>{
                             setTemporalSendId(props.id);
-                            console.log(temporalSendId);
-                            console.log('aca abajo id')
-                            console.log(props.id)
                             if(temporalSendId !== 0){
                                 requestMessages()
                             }
@@ -120,15 +126,20 @@ const MainPage = ()=>{
                         </div>
                     </div>
             )
-        }
-
-        return(
-            allUsers.length > 0 ? allUsers.map((user, index)=>{
-                if(user.userUID !== userInfo.userID){
-                  return(  <UserSchema usuario={user.userName} id={user.userUID} key={index}/> )
-                }
-            }) : <p>Cargando...</p>
-        )
+        }    
+          return (
+            <>
+              {isLoading ? (
+                <p>Cargando...</p>
+              ) : (
+                allUsers
+                  .filter(user => user.userUID !== userInfo.userID)
+                  .map(user => (
+                    <UserSchema key={user.userUID} id={user.userUID} usuario={user.userName} />
+                  ))
+              )}
+            </>
+          );
     }
 
     useEffect(() => {
@@ -159,31 +170,7 @@ const MainPage = ()=>{
       });
     }, []);
     
-    
-
-    const MensajeriaSchema = () => {
-        //const [mensajes, setMensajes] = useState([]);
-      
-        const MensajeEnviadoSchema = (props) => {
-          return (
-            <div className="sendedMSG">  
-              <div className="userMsgContentMP">
-                {props.contenido}
-              </div>
-            </div>
-          );
-        }
-
-        const MensajeRecibidoSchema = (props) => {
-            return (
-              <div className="recivedMSG">  
-                <div className="userMsgContentMP">
-                  {props.contenido}
-                </div>
-              </div>
-            );
-          }
-      
+    const MensajeriaSchema = () => {      
         return (
           <div className="mensajesCont">
             <div className="userTalkingMP">
@@ -219,20 +206,6 @@ const MainPage = ()=>{
         );
       }
 
-    const MyProfileSchema = (props) =>{
-        return(
-            <div className="MPminiSchema">
-                <div className="ImgMPminiCont">
-                    <img className="imgMPmini" src={userImg}/>
-                </div>
-                <div className="textMPmini">
-                    <div className="MPminiName">{props.userName}</div>
-                    <div className="MPminiStatus">Conectado</div>
-                </div>
-            </div>
-        )
-    }
-
     const SendMessageInput = () =>{
         const [messageContent, setMessageContent] = useState('');
         const handleSendClick = () => {
@@ -242,7 +215,6 @@ const MainPage = ()=>{
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ msgContent: messageContent, sendTo: temporalSendId }),
                   })
-                  // Después de enviar el mensaje, borra el texto del textarea y el valor del useState
                     setMessageContent('');
             }
         };
@@ -254,8 +226,6 @@ const MainPage = ()=>{
           </>
         )
       }
-      
-
     return(
         <div className="containerMainPage">
             <div className="navMainPage">

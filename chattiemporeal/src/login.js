@@ -14,6 +14,7 @@ const Login = ()=>{
 
     const sendFetch = ()=>{
         try {
+            //LOW SECURE, CHANGE
             fetch('http://localhost:3001/rsc/login',{
                 method: 'POST',
                 headers : { "Content-Type": "application/json" },
