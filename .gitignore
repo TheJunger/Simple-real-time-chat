@@ -1,0 +1,18 @@
+# dependencies
+/node_modules
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+realtimechatbypera-firebase-adminsdk-rlxjf-229a91dc88.json
+firebase-debug.log
+admin
+auth
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

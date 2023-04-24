@@ -1,0 +1,10 @@
+#root{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-image: url(ondas.svg);
+    background-size: contain;
+    background-color: #000;
+}

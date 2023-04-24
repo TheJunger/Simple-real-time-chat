@@ -1,0 +1,214 @@
+.userMessageSchema{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2vh;
+    border-radius: 3vh;
+    background-color: #3b3a39;
+    padding: 1vh 0;
+    margin-right: 2vh;
+    color: #eee;
+}
+
+.MPminiSchema{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1vh;
+    background-color: rgb(72, 70, 68, 0.7);
+    padding: 0.5vh 0;
+    margin-right: 2vh;
+    color: #eee;
+}
+
+.ImgMPminiCont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgMPmini{
+    width: 5vw;
+    height: 10vh;
+    border-radius: 100%;
+}
+
+.textMPmini{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.textMPmini *{
+    padding: 0 1vh;
+}
+
+.MPminiName{
+    font-size: 3vh;
+    font-weight: bold;
+}
+
+.MPminiStatus{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 2vh;
+    width: 11vw;
+    height: 5vh;
+    padding: 0.5vh 1vh;
+}
+
+
+.ImgUserSchemaCont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgUserSchema{
+    width: 5vw;
+    height: 10vh;
+    border-radius: 100%;
+}
+
+.textUserMsgSchema{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.textUserMsgSchema *{
+    padding: 0 1vh;
+}
+
+.userNameSchema{
+    font-size: 3vh;
+    font-weight: bold;
+}
+
+.lastMessageSchema{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 2vh;
+    width: 11vw;
+    height: 5vh;
+    padding: 0.5vh 1vh;
+}
+
+/*//containerMainPage// */
+
+.containerMainPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 92vw;
+    height: 85vh;
+    padding: 3vh 2vh;
+    border-radius: 2vh;
+    background-image: linear-gradient(to top, rgb(96, 94, 92, 0.5), rgb(0, 0, 0, 0.9), rgb(96, 94, 92, 0.5))
+}
+
+.navMainPage{
+    width: 100vw;
+    font-size: 6.5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    margin-bottom: 1vh
+}
+
+.mainContentMP{
+    display: flex;
+}
+
+.left{
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.right{
+    background-color: #3b3a39;
+    width: 72vw;
+    height: 78vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 2vh;
+    color: #eee;
+}
+
+.btnContMP{
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+.msgcontentMP{
+    height: 8vh;
+    width: 90%;
+    font-size: 3vh;
+    background-color: #605e5c;
+    color: #eee;
+    padding: 0.5vh 1vh;
+}
+
+.msgcontentMP::placeholder, .btnSendMP::placeholder{
+    color: #eee;
+}
+
+.JustAseparator{
+    margin: 1vh 0;
+    width: 80%;
+    border-bottom: 0.5vh solid #222;
+}
+
+.btnSendMP{
+    width: 10%;
+    height: 9.3vh;
+    border: none;
+    background-color: #605e5c;
+    border-left: 0.5vh solid #3b3a39;
+    color: #eee;
+}
+
+.userTalkingMP{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 4vh;
+}
+
+.msgContentMP{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.userNameMSGMP{
+    font-size: 3vh;
+    font-weight: 600;
+}
+
+.recivedMSG{
+    align-self: flex-start;
+}
+
+.sendedMSG{
+    align-self: flex-end;
+}
+
+.mensajesCont{
+    padding: 0 3vh;
+    overflow-y: scroll;
+    max-height: 80vh;
+}
